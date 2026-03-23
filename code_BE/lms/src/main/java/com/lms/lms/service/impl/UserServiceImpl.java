@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User register(String email, String rawPassword, String fullName) {
+    public UserProfileResponse register(String email, String rawPassword, String fullName) {
         if (userRepository.existsByEmail(email)) {
             throw new AppException(ResponseCode.VALIDATION_ERROR, "Email already exits");
         }
@@ -47,8 +47,15 @@ public class UserServiceImpl implements UserService {
                 .createdAt(now)
                 .updatedAt(now)
                 .build();
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
 
+        return UserProfileResponse.builder()
+                .id(saved.getId())
+                .email(saved.getEmail())
+                .fullName(saved.getFullName())
+                .avatarUrl(saved.getAvatarUrl())
+                .role(saved.getRole())
+                .build();
     }
 
     @Override
@@ -136,6 +143,13 @@ public class UserServiceImpl implements UserService {
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
             String avatarUrl = "/uploads/avatars/" + newFileName;
+
+            // xóa avatar cũ nếu có
+            if (user.getAvatarUrl() != null && user.getAvatarUrl().startsWith("/uploads/avatars/")) {
+                String oldFileName = user.getAvatarUrl().substring("/uploads/avatars/".length());
+                Path oldFile = avatarDir.resolve(oldFileName);
+                Files.deleteIfExists(oldFile);
+            }
 
             user.setAvatarUrl(avatarUrl);
             user.setUpdatedAt(Instant.now());

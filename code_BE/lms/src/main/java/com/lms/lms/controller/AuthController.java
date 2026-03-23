@@ -11,7 +11,7 @@ import com.lms.lms.dto.request.RefreshTokenRequest;
 import com.lms.lms.dto.request.RegisterRequest;
 import com.lms.lms.dto.response.ApiResponse;
 import com.lms.lms.dto.response.AuthResponse;
-import com.lms.lms.entity.User;
+import com.lms.lms.dto.response.UserProfileResponse;
 import com.lms.lms.service.AuthService;
 import com.lms.lms.service.UserService;
 import com.lms.lms.utils.ApiResponseUtil;
@@ -27,10 +27,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ApiResponse<User> register(@Valid @RequestBody RegisterRequest req) {
-        User user = userService.register(req.email(), req.password(), req.fullName());
-        user.setPasswordHash(null);
-        return ApiResponseUtil.success(user);
+    public ApiResponse<UserProfileResponse> register(@Valid @RequestBody RegisterRequest req) {
+        return ApiResponseUtil.success("Registered successfully", userService.register(req.email(), req.password(), req.fullName()));
     }
 
     @PostMapping("/login")
