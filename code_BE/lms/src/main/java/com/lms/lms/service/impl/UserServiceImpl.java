@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lms.lms.dto.response.UserProfileResponse;
 import com.lms.lms.entity.User;
 import com.lms.lms.entity.enums.Role;
 import com.lms.lms.exception.AppException;
@@ -37,6 +38,20 @@ public class UserServiceImpl implements UserService {
                 .build();
         return userRepository.save(user);
 
+    }
+
+    @Override
+    public UserProfileResponse getMyProfile(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ResponseCode.NOT_FOUND, "User not found"));
+
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .avatarUrl(user.getAvatarUrl())
+                .role(user.getRole())
+                .build();
     }
 
 }
