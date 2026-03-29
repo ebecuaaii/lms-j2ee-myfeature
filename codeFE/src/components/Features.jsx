@@ -1,0 +1,52 @@
+'use client';
+
+import React from 'react';
+import { FaChalkboardTeacher, FaAward, FaBrain } from 'react-icons/fa';
+
+export default function Features() {
+  const features = [
+    {
+      icon: <FaChalkboardTeacher />,
+      title: "Learn from the Best",
+      description: "Access courses curated by top professors and industry leaders from around the globe.",
+      color: "#e11d48", // Rose Red
+    },
+    {
+      icon: <FaAward />,
+      title: "Secure Certifications",
+      description: "Earn recognized certificates that are blockchain-verified and shareable on LinkedIn.",
+      color: "#2563eb", // Royal Blue
+    },
+    {
+      icon: <FaBrain />,
+      title: "AI Progress Tracking",
+      description: "Get personalized insights on your learning habits and areas for improvement.",
+      color: "#7c3aed", // Violet
+    },
+  ];
+
+  return (
+    <section id="features" className="section features-section">
+      <div className="container">
+        <div className="section-title">
+          <h2>One Platform, Endless Possibilities</h2>
+          <p>
+            Tailored experiences whether you are looking to learn or looking to teach.
+          </p>
+        </div>
+
+        <div className="grid-3 features-grid">
+          {features.map((feature, index) => (
+            <div key={index} className="feature-card">
+              <div className="feature-icon" style={{ backgroundColor: `${feature.color}15`, color: feature.color }}>
+                {feature.icon}
+              </div>
+              <h3 className="feature-title">{feature.title}</h3>
+              <p className="feature-desc">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
