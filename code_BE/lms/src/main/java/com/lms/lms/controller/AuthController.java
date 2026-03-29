@@ -27,8 +27,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ApiResponse<UserProfileResponse> register(@Valid @RequestBody RegisterRequest req) {
-        return ApiResponseUtil.success("Registered successfully", userService.register(req.email(), req.password(), req.fullName()));
+    public ApiResponse<AuthResponse> register(@Valid @RequestBody RegisterRequest req) {
+        userService.register(req.email(), req.password(), req.fullName());
+        // auto-login after register
+        AuthResponse auth = authService.login(req.email(), req.password());
+        return ApiResponseUtil.success("Registered successfully", auth);
     }
 
     @PostMapping("/login")
